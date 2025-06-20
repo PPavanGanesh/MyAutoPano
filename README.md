@@ -1,7 +1,3 @@
-Based on your `Wrapper.py` code and the structure of your project (as seen in the image), along with the detailed explanation from your `Report.pdf`, here's a comprehensive `README.md` you can use:
-
----
-
 # MyAutoPano (Phase 1)
 
 ## Overview
