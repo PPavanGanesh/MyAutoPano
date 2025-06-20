@@ -1,13 +1,20 @@
-MyAutoPano (Phase 1)
-Overview
-MyAutoPano is a panoramic image stitching system developed using classical computer vision techniques. The system processes overlapping images by detecting feature points, computing descriptors, matching them, applying RANSAC for homography estimation, and finally stitching them into seamless panoramas.
+Based on your `Wrapper.py` code and the structure of your project (as seen in the image), along with the detailed explanation from your `Report.pdf`, here's a comprehensive `README.md` you can use:
+
+---
+
+# MyAutoPano (Phase 1)
+
+## Overview
+
+**MyAutoPano** is a panoramic image stitching system developed using classical computer vision techniques. The system processes overlapping images by detecting feature points, computing descriptors, matching them, applying RANSAC for homography estimation, and finally stitching them into seamless panoramas.
 
 This project was implemented in Python using OpenCV and Numpy, and supports automatic panorama creation from image sets using a middle-out stitching approach.
 
-Directory Structure
-bash
-Copy
-Edit
+---
+
+## Directory Structure
+
+```
 .
 ├── Code
 │   ├── Data
@@ -23,98 +30,95 @@ Edit
 │   ├── Draft.py            # (Optional draft utilities, can be ignored)
 │   ├── README.md           # This file
 │   └── Report.pdf          # Final project report with visual results
-Features
-Shi-Tomasi Corner Detection with OpenCV’s goodFeaturesToTrack
+```
 
-Adaptive Non-Maximal Suppression (ANMS) for even corner distribution
+---
 
-41x41 Patch Extraction, Gaussian Blurring, Subsampling to 8x8, and Z-score Normalization
+## Features
 
-Feature Matching using SSD + Lowe's Ratio Test
+* **Shi-Tomasi Corner Detection** with OpenCV’s `goodFeaturesToTrack`
+* **Adaptive Non-Maximal Suppression (ANMS)** for even corner distribution
+* **41x41 Patch Extraction**, Gaussian Blurring, Subsampling to 8x8, and Z-score Normalization
+* **Feature Matching** using SSD + Lowe's Ratio Test
+* **Robust Homography Estimation** using RANSAC
+* **Image Stitching** with Homography Warping and Memory-Efficient Blending
+* **Middle-Out Stitching Strategy** for large image sets
+* Visualizations saved for:
 
-Robust Homography Estimation using RANSAC
+  * Corner Detection
+  * ANMS
+  * Feature Descriptors
+  * Feature Matches
+  * RANSAC Inliers
 
-Image Stitching with Homography Warping and Memory-Efficient Blending
+---
 
-Middle-Out Stitching Strategy for large image sets
+## Requirements
 
-Visualizations saved for:
-
-Corner Detection
-
-ANMS
-
-Feature Descriptors
-
-Feature Matches
-
-RANSAC Inliers
-
-Requirements
-Python 3.6+
-
-OpenCV
-
-NumPy
-
-imutils (optional)
+* Python 3.6+
+* OpenCV
+* NumPy
+* imutils (optional)
 
 Install with:
 
-bash
-Copy
-Edit
+```bash
 pip install opencv-python numpy imutils
-Running the Project
-Update the paths in main() inside Wrapper.py to point to the desired input folder and output folder:
+```
 
-python
-Copy
-Edit
+---
+
+## Running the Project
+
+Update the paths in `main()` inside `Wrapper.py` to point to the desired input folder and output folder:
+
+```python
 folder_path = r"path\to\your\input\images"
 output_path = r"path\to\save\results"
+```
+
 Then, run:
 
-bash
-Copy
-Edit
+```bash
 python Wrapper.py
+```
+
 The script will:
 
-Load and process images
+1. Load and process images
+2. Perform corner detection and ANMS
+3. Extract and visualize descriptors
+4. Match features and compute homography using RANSAC
+5. Stitch the images and save the final panorama
 
-Perform corner detection and ANMS
+---
 
-Extract and visualize descriptors
+## Output
 
-Match features and compute homography using RANSAC
+* Final panoramas saved as `final_panorama.jpg` in the output folder
+* Intermediate visualizations:
 
-Stitch the images and save the final panorama
+  * `corners/` — Corner detection images
+  * `anms/` — ANMS-selected keypoints
+  * `feature_descriptors/` — Descriptor patch visuals
+  * `matches/` — Feature match lines
+  * `ransac/` — Inlier matches after RANSAC
 
-Output
-Final panoramas saved as final_panorama.jpg in the output folder
+---
 
-Intermediate visualizations:
+## Authors
 
-corners/ — Corner detection images
+* **Pavan Ganesh Pabbineedi**
+  Master’s in Robotics, Worcester Polytechnic Institute
+  Email: [ppabbineedi@wpi.edu](mailto:ppabbineedi@wpi.edu)
 
-anms/ — ANMS-selected keypoints
+* **Manideep Duggi**
+  Master’s in Robotics, Worcester Polytechnic Institute
+  Email: [mduggi@wpi.edu](mailto:mduggi@wpi.edu)
 
-feature_descriptors/ — Descriptor patch visuals
+---
 
-matches/ — Feature match lines
+## References
 
-ransac/ — Inlier matches after RANSAC
-
-Authors
-Pavan Ganesh Pabbineedi
-Master’s in Robotics, Worcester Polytechnic Institute
-Email: ppabbineedi@wpi.edu
-
-Manideep Duggi
-Master’s in Robotics, Worcester Polytechnic Institute
-Email: mduggi@wpi.edu
-
-References
-See Report.pdf for implementation details, analysis, challenges, and visual outputs.
+See `Report.pdf` for implementation details, analysis, challenges, and visual outputs.
 
