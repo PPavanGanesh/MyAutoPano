@@ -169,115 +169,6 @@ def stitch_middle_out(folder_path, output_path):
     cv2.imwrite(os.path.join(output_path, 'final_panorama.jpg'), result)
     return result
 
-############################################################################################################################1
-# def stitch_middle_out(folder_path, output_path):
-#     """
-#     Stitch images starting from the middle and expanding outwards
-#     First completes left side stitching, then right side
-#     """
-#     # Load all images
-#     image_files = sorted([f for f in os.listdir(folder_path) if f.endswith('.jpg')])
-#     images = []
-#     for f in image_files:
-#         img = cv2.imread(os.path.join(folder_path, f))
-#         if img is not None:
-#             images.append(img)
-    
-#     n = len(images)
-#     if n < 2:
-#         print("Need at least 2 images for stitching")
-#         return
-    
-#     # Find middle index
-#     mid = n // 2
-    
-#     if n % 2 == 0:  # Even number of images
-#         # Start with middle two images
-#         result = stitch_pair(images[mid-1], images[mid], output_path, f'stitch_{mid-1}_{mid}')
-        
-#         # Complete left side first
-#         for i in range(mid-2, -1, -1):
-#             result = stitch_pair(images[i], result, output_path, f'stitch_left_{i}')
-        
-#         # Then complete right side
-#         for i in range(mid+1, n):
-#             result = stitch_pair(result, images[i], output_path, f'stitch_right_{i}')
-            
-#     else:  # Odd number of images
-#         # Start with middle image
-#         result = images[mid]
-        
-#         # Alternate between left and right
-#         left_idx = mid - 1
-#         right_idx = mid + 1
-        
-#         while left_idx >= 0 or right_idx < n:
-#             if left_idx >= 0:
-#                 result = stitch_pair(images[left_idx], result, output_path, f'stitch_left_{left_idx}')
-#                 left_idx -= 1
-            
-#             if right_idx < n:
-#                 result = stitch_pair(result, images[right_idx], output_path, f'stitch_right_{right_idx}')
-#                 right_idx += 1
-    
-#     cv2.imwrite(os.path.join(output_path, 'final_panorama.jpg'), result)
-#     return result
-###############################################################################################################################
-
-# def stitch_middle_out(folder_path, output_path):
-#     """
-#     Stitch images starting from the middle and expanding outwards
-#     First completes left side stitching, then sequentially stitches right side
-#     """
-#     # Load all images
-#     image_files = sorted([f for f in os.listdir(folder_path) if f.endswith('.jpg')])
-#     images = []
-#     for f in image_files:
-#         img = cv2.imread(os.path.join(folder_path, f))
-#         if img is not None:
-#             images.append(img)
-    
-#     n = len(images)
-#     if n < 2:
-#         print("Need at least 2 images for stitching")
-#         return
-    
-#     # Find middle index
-#     mid = n // 2
-    
-#     if n % 2 == 0:  # Even number of images
-#         # Start with middle two images (3 and 4 for 8 images)
-#         result = stitch_pair(images[mid-1], images[mid], output_path, f'stitch_{mid-1}_{mid}')
-        
-#         # Complete left side first (2, 1, 0)
-#         for i in range(mid-2, -1, -1):
-#             result = stitch_pair(images[i], result, output_path, f'stitch_left_{i}')
-#             # Save intermediate result after completing left side
-#             if i == 0:
-#                 cv2.imwrite(os.path.join(output_path, 'left_side_complete.jpg'), result)
-        
-#         # Then sequentially stitch with right side images (5, 6, 7)
-#         for i in range(mid+1, n):
-#             result = stitch_pair(result, images[i], output_path, f'stitch_complete_with_{i}')
-#             # Save intermediate result after each right side stitch
-#             cv2.imwrite(os.path.join(output_path, f'with_image_{i}_complete.jpg'), result)
-            
-#     else:  # Odd number of images
-#         # Start with middle image
-#         result = images[mid]
-        
-#         # Complete left side first
-#         for i in range(mid-1, -1, -1):
-#             result = stitch_pair(images[i], result, output_path, f'stitch_left_{i}')
-        
-#         # Then complete right side sequentially
-#         for i in range(mid+1, n):
-#             result = stitch_pair(result, images[i], output_path, f'stitch_complete_with_{i}')
-    
-#     cv2.imwrite(os.path.join(output_path, 'final_panorama.jpg'), result)
-#     return result
-
-
 def match_features(desc1, desc2, corners1, corners2, ratio_threshold=0.8):
     """
     Match features between two images using ratio test
@@ -343,57 +234,7 @@ def apply_RANSAC(matches, corners1, corners2, threshold=8.0, max_iterations=2000
             continue
     
     return best_H, best_inliers
-
-# def stitch_images(img1, img2, H):
-#     """
-#     Stitch two images using homography and blend them
-#     """
-#     # Get dimensions
-#     h1, w1 = img1.shape[:2]
-#     h2, w2 = img2.shape[:2]
     
-#     # Find corners of second image in first image space
-#     corners2 = np.float32([[0, 0], [0, h2], [w2, h2], [w2, 0]]).reshape(-1, 1, 2)
-#     transformed_corners = cv2.perspectiveTransform(corners2, H)
-#     corners1 = np.float32([[0, 0], [0, h1], [w1, h1], [w1, 0]]).reshape(-1, 1, 2)
-    
-#     # Find dimensions of stitched image
-#     all_corners = np.concatenate((corners1, transformed_corners), axis=0)
-#     x_min, y_min = np.int32(all_corners.min(axis=0).ravel() - 0.5)
-#     x_max, y_max = np.int32(all_corners.max(axis=0).ravel() + 0.5)
-    
-#     # Create translation matrix
-#     translation = [-x_min, -y_min]
-#     H_translation = np.array([[1, 0, translation[0]], 
-#                             [0, 1, translation[1]], 
-#                             [0, 0, 1]], dtype=np.float32)
-    
-#     # Warp images
-#     output_size = (x_max - x_min, y_max - y_min)
-#     warped_img2 = cv2.warpPerspective(img2, H_translation, output_size)
-#     warped_img1 = cv2.warpPerspective(img1, H_translation.dot(H), output_size)
-    
-#     # Create masks for blending
-#     mask1 = (cv2.cvtColor(warped_img1, cv2.COLOR_BGR2GRAY) > 0).astype(np.float32)
-#     mask2 = (cv2.cvtColor(warped_img2, cv2.COLOR_BGR2GRAY) > 0).astype(np.float32)
-    
-#     # Apply Gaussian blur to masks for smooth blending
-#     mask1 = cv2.GaussianBlur(mask1, (5,5), 4)
-#     mask2 = cv2.GaussianBlur(mask2, (5,5), 4)
-    
-#     # Normalize masks
-#     sum_masks = mask1 + mask2
-#     mask1 = mask1 / (sum_masks + 1e-6)
-#     mask2 = mask2 / (sum_masks + 1e-4)
-    
-#     # Blend images
-#     result = np.zeros_like(warped_img1, dtype=np.float32)
-#     for c in range(3):
-#         result[..., c] = (warped_img1[..., c] * mask1 + 
-#                          warped_img2[..., c] * mask2)
-    
-#     return result.astype(np.uint8)
-
 def stitch_images(img1, img2, H):
     """
     Memory-efficient version of image stitching
@@ -645,3 +486,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
